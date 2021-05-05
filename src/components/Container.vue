@@ -5,8 +5,12 @@
     </div>
 
     <div id="section_bottom">
-      <Question />
-      <Answer />
+      <div id="section_bottom_question">
+        <Question />
+      </div>
+      <div id="section_bottom_answer">
+        <Answer />
+      </div>
     </div>
   </div>
 </template>
@@ -38,7 +42,17 @@ export default {
 
   #section_bottom {
     height: 55vh;
-    padding-top: 20px;
     background-color: #11093A;
+
+    #section_bottom_question {
+      padding-top: 20px;
+      padding-bottom: 25px;
+    }
+
+    #section_bottom_answer {
+      width: 50%;
+      padding-top: 25px;
+      margin: auto;
+    }
   }
 </style>
