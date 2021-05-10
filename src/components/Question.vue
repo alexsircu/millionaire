@@ -1,12 +1,18 @@
 <template>
   <div id="question_container" class="one_line_content">
-    {{example}}
+    {{ questionToPass }}
   </div>
 </template>
 
 <script>
 export default {
   name: 'Question',
+  props: {
+    questionToPass: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
       example : 'Chi è stato il primo insegnante Boolean?'
@@ -29,6 +35,7 @@ export default {
   #question_container {
     position: relative;
     width: 30%;
+    color: white;
     padding: 20px 40px;
     border-top: 3px solid white;
     border-bottom: 3px solid white;
