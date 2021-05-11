@@ -6,10 +6,10 @@
 
     <div id="section_bottom">
       <div id="section_bottom_question">
-        <Question :questionToPass="questions_array[0].question"/>
+        <Question :questionToPass="questionToPass"/>
       </div>
       <div id="section_bottom_answer">
-        <div class="answer_container" v-for="(answer, index) in questions_array[0].answers" :key="index">
+        <div class="answer_container" v-for="(answer, index) in answersToPassArray" :key="index">
           <Answer :answerToPass="answer" />
         </div>
       </div>
@@ -35,12 +35,51 @@ export default {
           question: "Quale IDE è stato usato per scrivere il codice di questo gioco?",
           answers: ["A: Visual Studio Code", "B: Atom", "C: Eclipse", "D: NetBeans"],
           correct : 0
+        },
+        {
+          question: "Di che materiale è fatta la punta di un giavellotto olimpico?",
+          answers: ["A: resina", "B: legno", "C: metallo", "D: osso"],
+          correct : 2
+        },
+        {
+          question: "Chi è stato il primo calciatore italiano a vincere la Scarpa d'Oro, il premio che si assegna al miglior goleador del calcio europeo?",
+          answers: ["A: Alessandro Del Piero", "B: Luca Toni", "C: Roberto Baggio", "D: Frncesco Totti"],
+          correct : 2
+        },
+        {
+          question: "Chi tra Pocahontas, Calamity Jane, Giovanna d'Arco e Maria Teresa d'Asburgo visse prima?",
+          answers: ["A: Giovanna d'Arco", "B: Maria Teresa d'Asburgo", "C: Pocahontas", "D: Calamity Jane"],
+          correct : 2
+        },
+        {
+          question: "Dieci anni fa veniva caricata una foto che apriva la rivoluzionaria era di un nuovo social network: Instagram.Oltre a un cane, cosa ritraeva?",
+          answers: ["A: un guinzaglio", "B: una mano maschile", "C: un gatto", "D: un piede femminile"],
+          correct : 2
         }
-      ]
+      ],
+      questionToPass: "",
+      answersToPassArray: []
     }
   },
   mounted() {
-    console.log(this.questions_array[0].answers);
+    const self = this;
+
+    let getRandomNumber = function(min, max) {
+      return Math.round(Math.random() * (max - min) + min);
+    }
+
+    let randomNumber = getRandomNumber(0, 4);
+    console.log(randomNumber);
+
+    self.questionToPass = self.questions_array[randomNumber].question;
+    self.answersToPassArray = self.questions_array[randomNumber].answers;
+    
+    
+    // mi serve una funzione che mi genera un numero casuale
+    // faccio il ciclo sull'array e prendo esattamente l'oggetto con la stessa posizione del numero casuale generato
+    // inserisco la domanda dentro una variabile e l'array dentro un'altra variabile
+    // passo al component della domanda solamente la domanda e al component della risposta solo l'array con le risposte
+    // devo creare una funzione nei methods per gestire il click sulla risposta e il click per riprovare di nuovo 
   }
 }
 </script>
