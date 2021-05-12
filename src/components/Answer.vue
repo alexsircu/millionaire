@@ -1,7 +1,9 @@
 <template>
   <div> 
-    <div class="answer_container">{{ answerToPass }}</div>
+    <div class="answer_container" @click="answerClicked" :data-value="answerToPass">{{ answerToPass }}</div>
   </div>
+
+  <!-- qui ho testato il passaggio di dati da padre a figlio. Ho scelto di creare il contenitore della risposta come div e quindi dovevo trovare un modo per passare il contenuto del div al padre attraverso $emit, quindi ho creato un attributo personalizzato :data-value e ho inserito all'interno il contenuto della risposta, al click del div si attiva il metodo "checkIfCorrect" definito nei methods che a sua volta attiva l'strunzione $emit che crea un nuovo metodo da passare al padre e come secondo paramentro passsa il dato che gli serve, in questo caso answerToPass che ho recuperato attraverso l'istruzione event.target.getAttribute('data-value'); -->
 </template>
 
 <script>
@@ -11,6 +13,15 @@ export default {
     answerToPass: {
       type: String,
       required: true
+    }
+  },
+  methods: {
+    answerClicked(event) {
+
+      const self = this;
+      const answerClickedString = event.target.getAttribute('data-value');
+      self.$emit("answerClicked", answerClickedString);
+
     }
   }
 }

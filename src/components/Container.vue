@@ -10,7 +10,7 @@
       </div>
       <div id="section_bottom_answer">
         <div class="answer_container" v-for="(answer, index) in answersToPassArray" :key="index">
-          <Answer :answerToPass="answer" />
+          <Answer :answerToPass="answer" @answerClicked="checkIfCorrect" />
         </div>
       </div>
     </div>
@@ -30,7 +30,7 @@ export default {
   },
   data() {
     return {
-      questions_array: [
+      questionsArray: [
         {
           question: "Quale IDE è stato usato per scrivere il codice di questo gioco?",
           answers: ["A: Visual Studio Code", "B: Atom", "C: Eclipse", "D: NetBeans"],
@@ -38,27 +38,28 @@ export default {
         },
         {
           question: "Di che materiale è fatta la punta di un giavellotto olimpico?",
-          answers: ["A: resina", "B: legno", "C: metallo", "D: osso"],
+          answers: ["A: Resina", "B: Legno", "C: Metallo", "D: Osso"],
           correct : 2
         },
         {
           question: "Chi è stato il primo calciatore italiano a vincere la Scarpa d'Oro, il premio che si assegna al miglior goleador del calcio europeo?",
-          answers: ["A: Alessandro Del Piero", "B: Luca Toni", "C: Roberto Baggio", "D: Frncesco Totti"],
-          correct : 2
+          answers: ["A: Alessandro Del Piero", "B: Luca Toni", "C: Roberto Baggio", "D: Francesco Totti"],
+          correct : 1
         },
         {
           question: "Chi tra Pocahontas, Calamity Jane, Giovanna d'Arco e Maria Teresa d'Asburgo visse prima?",
           answers: ["A: Giovanna d'Arco", "B: Maria Teresa d'Asburgo", "C: Pocahontas", "D: Calamity Jane"],
-          correct : 2
+          correct : 0
         },
         {
           question: "Dieci anni fa veniva caricata una foto che apriva la rivoluzionaria era di un nuovo social network: Instagram.Oltre a un cane, cosa ritraeva?",
-          answers: ["A: un guinzaglio", "B: una mano maschile", "C: un gatto", "D: un piede femminile"],
-          correct : 2
+          answers: ["A: Un guinzaglio", "B: Una mano maschile", "C: Un gatto", "D: Un piede femminile"],
+          correct : 3
         }
       ],
       questionToPass: "",
-      answersToPassArray: []
+      answersToPassArray: [],
+      randomNumberGenerated: 0
     }
   },
   mounted() {
@@ -68,11 +69,15 @@ export default {
       return Math.round(Math.random() * (max - min) + min);
     }
 
-    let randomNumber = getRandomNumber(0, 4);
+    const arrayLength = self.questionsArray.length - 1; //lunghezza array per sapere quanti numeri generare random
+
+    let randomNumber = getRandomNumber(0, arrayLength);
     console.log(randomNumber);
 
-    self.questionToPass = self.questions_array[randomNumber].question;
-    self.answersToPassArray = self.questions_array[randomNumber].answers;
+    self.questionToPass = self.questionsArray[randomNumber].question;
+    self.answersToPassArray = self.questionsArray[randomNumber].answers;
+
+    self.randomNumberGenerated = randomNumber;
     
     
     // mi serve una funzione che mi genera un numero casuale
@@ -80,6 +85,24 @@ export default {
     // inserisco la domanda dentro una variabile e l'array dentro un'altra variabile
     // passo al component della domanda solamente la domanda e al component della risposta solo l'array con le risposte
     // devo creare una funzione nei methods per gestire il click sulla risposta e il click per riprovare di nuovo 
+  },
+  methods: {
+    checkIfCorrect(answer) {
+
+      const self = this;
+
+      const correctAnswerNumber = self.questionsArray[self.randomNumberGenerated].correct;
+
+      console.log(correctAnswerNumber);
+
+      if (answer === self.questionsArray[self.randomNumberGenerated].answers[correctAnswerNumber]) {
+        console.log("è quella giusta");
+      } else {
+        console.log("è quella sbagliata");
+      }
+
+      console.log(answer);
+    }
   }
 }
 </script>

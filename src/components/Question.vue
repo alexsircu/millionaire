@@ -13,20 +13,16 @@ export default {
       required: true
     }
   },
-  data() {
-    return {
-      example : 'Chi è stato il primo insegnante Boolean?'
-    }
-  },
-  mounted() {
+  updated() {
+
     const self = this;
     const questionContainer = document.querySelector('#question_container');
 
-    console.log(self.example.length);
-    if (self.example.length > 64) {
+    if (self.questionToPass.length > 64) {
       questionContainer.classList.remove('one_line_content');
       questionContainer.classList.add('two_line_content');
     }
+    
   }
 }
 </script>
