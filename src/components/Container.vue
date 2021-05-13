@@ -9,8 +9,8 @@
         <Question :questionToPass="questionToPass"/>
       </div>
       <div id="section_bottom_answer">
-        <div class="answer_container" v-for="(answer, index) in answersToPassArray" :key="index">
-          <Answer :answerToPass="answer" @answerClicked="checkIfCorrect" />
+        <div class="answer_container_parent" v-for="(answer, index) in answersToPassArray" :key="index">
+          <Answer :answerToPass="answer" :indexToPass="index" @answerClicked="checkIfCorrect" />
         </div>
       </div>
     </div>
@@ -59,51 +59,79 @@ export default {
       ],
       questionToPass: "",
       answersToPassArray: [],
-      randomNumberGenerated: 0
+      randomNumberGenerated: null
     }
   },
   mounted() {
-    const self = this;
 
-    let getRandomNumber = function(min, max) {
-      return Math.round(Math.random() * (max - min) + min);
-    }
-
-    const arrayLength = self.questionsArray.length - 1; //lunghezza array per sapere quanti numeri generare random
-
-    let randomNumber = getRandomNumber(0, arrayLength);
-    console.log(randomNumber);
-
-    self.questionToPass = self.questionsArray[randomNumber].question;
-    self.answersToPassArray = self.questionsArray[randomNumber].answers;
-
-    self.randomNumberGenerated = randomNumber;
+    this.questionCreation(); // funzione che mi permette di creare la domanda e le risposte
     
-    
-    // mi serve una funzione che mi genera un numero casuale
-    // faccio il ciclo sull'array e prendo esattamente l'oggetto con la stessa posizione del numero casuale generato
-    // inserisco la domanda dentro una variabile e l'array dentro un'altra variabile
-    // passo al component della domanda solamente la domanda e al component della risposta solo l'array con le risposte
-    // devo creare una funzione nei methods per gestire il click sulla risposta e il click per riprovare di nuovo 
   },
   methods: {
-    checkIfCorrect(answer) {
+    checkIfCorrect(string, id) {
 
       const self = this;
-
       const correctAnswerNumber = self.questionsArray[self.randomNumberGenerated].correct;
+      const answersContainer = document.querySelectorAll('.answer_container');
 
-      console.log(correctAnswerNumber);
+      if (string === self.questionsArray[self.randomNumberGenerated].answers[correctAnswerNumber]) {
 
-      if (answer === self.questionsArray[self.randomNumberGenerated].answers[correctAnswerNumber]) {
-        console.log("è quella giusta");
+        // in caso di risposta corretta
+        answersContainer[correctAnswerNumber].classList.add("correct_answer");
+        answersContainer[correctAnswerNumber].classList.remove("toggle_class");
+
+        setTimeout(self.questionCreation, 1000); // il gioco deve fare un'altra domanda e andare avanti
+
+        // modifico tutte le classi altrimenti rimarrebbero verdi/rosse
+        if (self.questionCreation) {
+
+          answersContainer[correctAnswerNumber].classList.remove("correct_answer");
+          answersContainer[correctAnswerNumber].classList.add("toggle_class");
+          
+          answersContainer.forEach(element => {
+
+            element.classList.remove("wrong_answer");
+            element.classList.add("toggle_class");
+
+          });  
+
+        }
+
       } else {
-        console.log("è quella sbagliata");
+        
+        // in caso di risposta sbagliata
+        for (let i = 0; i < answersContainer.length; i++) {
+
+          if (id == i) {
+
+            answersContainer[i].classList.add("wrong_answer");
+            answersContainer[i].classList.remove("toggle_class");
+          
+          } 
+        }
       }
 
-      console.log(answer);
+    },
+    questionCreation() {
+
+      const self = this;
+      self.randomNumberGenerated = null; //lo devo svuotare ogni volta che deve essere creata una nuova domanda
+      const arrayLength = self.questionsArray.length - 1; //lunghezza array per sapere quanti numeri generare random
+      let randomNumber = self.getRandomNumber(0, arrayLength);
+      console.log(randomNumber);
+
+      self.questionToPass = self.questionsArray[randomNumber].question;
+      self.answersToPassArray = self.questionsArray[randomNumber].answers;
+
+      self.randomNumberGenerated = randomNumber;
+
+    },
+    getRandomNumber(min, max) {
+
+      return Math.round(Math.random() * (max - min) + min);
+
     }
-  }
+  } 
 }
 </script>
 
@@ -135,7 +163,7 @@ export default {
       padding-right: 35px;
       margin: auto;
 
-      .answer_container {
+      .answer_container_parent {
         display: flex;
         justify-content: center;
         width: 50%;
